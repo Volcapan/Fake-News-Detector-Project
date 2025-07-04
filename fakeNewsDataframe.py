@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy
 import re
 
 class fakeNewsDataframe:
@@ -11,12 +12,17 @@ class fakeNewsDataframe:
     def __init__(self, path = ""):
         if path == "":
             fakeNews = pd.read_csv("Data/Fake.csv")
-            realNews = pd.read_csv("Data/True.csv")
-            self.news = pd.concat([fakeNews, realNews], ignore_index=True)
+            fakeNews["truthfulness"] = numpy.zeros(fakeNews.shape[0])
 
+            realNews = pd.read_csv("Data/True.csv")
+            realNews["truthfulness"] = numpy.ones(realNews.shape[0])
+            
+            self.news = pd.concat([fakeNews, realNews], ignore_index=True)
             self.news["title"] =  self.news["title"].apply(self.convertToLower)
             self.news["title"] = self.news["title"].apply(self.getRidOfPunc)
             self.news["title"] = self.news["title"].astype('string')
             self.news["text"] = self.news["text"].apply(self.convertToLower)
             self.news["text"] = self.news["text"].apply(self.getRidOfPunc)
             self.news["text"] = self.news["text"].astype('string')
+        else:
+            print("Functionality not built yet")
