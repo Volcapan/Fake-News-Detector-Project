@@ -4,14 +4,16 @@ from fakeNewsDataset import fakeNewsDataset
 
 def main():
     test = fakeNewsDataframe()
-    test2 = fakeNewsDataset(test.news)
 
-    print(test2.__len__())
+    print(test.news)
+    # test2 = fakeNewsDataset(test.news)
 
-    testSample, testLabel = test2.__getitem__(index=0)
+    # bprint(test2.__len__())
 
-    print(testSample)
-    print(testLabel)
+    # testSample, testLabel = test2.__getitem__(index=0)
+
+    # print(testSample)
+    # print(testLabel)
 
 if __name__ == "__main__":
     main()
