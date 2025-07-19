@@ -61,3 +61,6 @@ class fakeNewsDataframe:
         self.news["text"] = self.news["text"].astype('string')
 
         self.news["titleAndText"] = self.processTitleAndText()
+
+        self.news = self.news.drop("subject", axis=1)
+        self.news = self.news.drop("date", axis=1)
