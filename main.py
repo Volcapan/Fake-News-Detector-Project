@@ -11,8 +11,7 @@ def main():
     dsTest = fakeNewsDataset(dfTest)
 
     print(dsTest.__len__())
-    print(dsTest.seqSize)
-    print(len(dsTest.samples))
+    print(dsTest.__getitem__(440))
 
 if __name__ == "__main__":
     main()
