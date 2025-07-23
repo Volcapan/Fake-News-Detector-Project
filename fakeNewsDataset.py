@@ -2,17 +2,17 @@ import torch
 from torch.utils.data import Dataset
 
 class fakeNewsDataset(Dataset):
-    def __init__(self, fakeNewsDF):
+    def __init__(self, dataframe):
         self.device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
         self.samples = []
 
-        for titleAndText in fakeNewsDF.news["titleAndText"]:
+        for titleAndText in dataframe["titleAndText"]:
             tatTensor = torch.tensor(titleAndText)
             tatTensor = tatTensor.to(self.device)
             
             self.samples.append(tatTensor)
 
-        self.labels = torch.tensor(fakeNewsDF.news["truthfulness"])
+        self.labels = torch.tensor(dataframe["truthfulness"].to_numpy())
         self.labels = self.labels.to(self.device)
         
         self.size = len(self.samples)
