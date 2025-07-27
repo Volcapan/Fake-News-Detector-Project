@@ -1,9 +1,10 @@
 import torch
 from torch.utils.data import Dataset
+import getDevice
 
 class fakeNewsDataset(Dataset):
     def __init__(self, dataframe):
-        self.device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
+        self.device = getDevice.get_device_func()
         self.samples = []
 
         for titleAndText in dataframe["titleAndText"]:
