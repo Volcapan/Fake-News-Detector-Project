@@ -4,6 +4,8 @@ import getDevice
 
 class fakeNewsDataset(Dataset):
     def __init__(self, dataframe):
+        super().__init__()
+        
         self.device = getDevice.get_device_func()
         self.samples = []
 
