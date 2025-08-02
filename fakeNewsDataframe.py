@@ -14,6 +14,7 @@ class fakeNewsDataframe:
         listOfTitleAndText = []
         vocabulary = set()
         self.wordMap = {}
+        self.vocabSize = 0
         listOfProcessedTaT = []
 
         for index in range(numRows):
@@ -40,6 +41,8 @@ class fakeNewsDataframe:
                 processedTaT.append(self.wordMap[word])
             
             listOfProcessedTaT.append(processedTaT)
+        
+        self.vocabSize = len(self.wordMap)
         
         return listOfProcessedTaT
     
