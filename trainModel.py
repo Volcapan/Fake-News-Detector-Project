@@ -6,14 +6,49 @@ import torch
 from torch.utils.data import DataLoader
 import collateFunc
 from fakeNewsNN import fakeNewsNN
+import getDevice
 
 def train(model, dataLoader, lossFunc, optimFunc):
-    print("In progress")
+    print("Training")
+
+    model.train()
+
+    for (samples, labels) in dataLoader:
+        predictions = model(samples)
+        predictions = predictions.float()
+        predictions = predictions.squeeze()
+        labels = labels.float()
+        labels = labels.squeeze()
+
+        loss = lossFunc(predictions, labels)
+
+        loss.backward()
+        optimFunc.step()
+        optimFunc.zero_grad()
+
+def validate(model, dataLoader, lossFunc):
+    print("Evaluating")
+
+    model.eval()
+
+    numSamples = len(dataLoader.dataset)
+    numBatches = len(dataLoader)
+    totalLoss = 0
+    totalCorrect = 0
+
+    for (samples, labels) in dataLoader:
+        predictions = model(samples)
+        predictions = predictions.squeeze()
+        labels = labels.squeeze()
+        totalLoss += lossFunc(predictions, labels).item()
+        totalCorrect += (predictions == labels).type(torch.float).sum().item()
+    
+    print(f"Correctness: {totalCorrect / numSamples}, Loss: {totalLoss / numBatches}")
 
 def main():
     randomStateVal = 440
     batchSize = 110
-    epochs = 10
+    epochs = 5
     learningRate = 1e-3
     
     fakeNewsDF = fakeNewsDataframe()
@@ -29,6 +64,7 @@ def main():
     testDataLoader = DataLoader(testDataset, batch_size=batchSize, collate_fn=collateFunc.collate_func, shuffle=True)
 
     fakeNewsNNModel = fakeNewsNN(fakeNewsDF.vocabSize)
+    fakeNewsNNModel = fakeNewsNNModel.to(getDevice.get_device_func())
     lossFunc = torch.nn.MSELoss()
     optimFunc = torch.optim.Adam(fakeNewsNNModel.parameters(), lr=learningRate)
 
@@ -36,6 +72,7 @@ def main():
         print(f"Epoch #{epoch + 1}")
 
         train(fakeNewsNNModel, trainDataLoader, lossFunc, optimFunc)
+        validate(fakeNewsNNModel, validateDataLoader, lossFunc)
 
 
 if __name__ == "__main__":

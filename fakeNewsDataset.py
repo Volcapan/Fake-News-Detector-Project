@@ -6,17 +6,16 @@ class fakeNewsDataset(Dataset):
     def __init__(self, dataframe):
         super().__init__()
         
-        self.device = getDevice.get_device_func()
         self.samples = []
 
         for titleAndText in dataframe["titleAndText"]:
             tatTensor = torch.tensor(titleAndText)
-            tatTensor = tatTensor.to(self.device)
+            tatTensor = tatTensor.to(getDevice.get_device_func())
             
             self.samples.append(tatTensor)
 
         self.labels = torch.tensor(dataframe["truthfulness"].to_numpy())
-        self.labels = self.labels.to(self.device)
+        self.labels = self.labels.to(getDevice.get_device_func())
         
         self.size = len(self.samples)
 
