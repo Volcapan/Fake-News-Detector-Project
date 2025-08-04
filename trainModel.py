@@ -41,9 +41,17 @@ def validate(model, dataLoader, lossFunc):
         predictions = predictions.squeeze()
         labels = labels.squeeze()
         totalLoss += lossFunc(predictions, labels).item()
+
+        predictions = model.sigmoid(predictions)
+        for idx in range(len(predictions)):
+            if predictions[idx] >= 0.5:
+                predictions[idx] = 1
+            else:
+                predictions[idx] = 0
+        
         totalCorrect += (predictions == labels).type(torch.float).sum().item()
     
-    print(f"Correctness: {totalCorrect / numSamples}, Loss: {totalLoss / numBatches}")
+    print(f"Total correctness: {totalCorrect / numSamples}, Loss: {totalLoss / numBatches}")
 
 def main():
     randomStateVal = 440
@@ -65,7 +73,7 @@ def main():
 
     fakeNewsNNModel = fakeNewsNN(fakeNewsDF.vocabSize)
     fakeNewsNNModel = fakeNewsNNModel.to(getDevice.get_device_func())
-    lossFunc = torch.nn.MSELoss()
+    lossFunc = torch.nn.BCEWithLogitsLoss()
     optimFunc = torch.optim.Adam(fakeNewsNNModel.parameters(), lr=learningRate)
 
     for epoch in range(epochs):

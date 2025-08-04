@@ -25,4 +25,4 @@ class fakeNewsNN(nn.Module):
 
         _, (hidden_layers, _) = self.lstm(padded_embedded_seqs)
         
-        return self.sigmoid(self.linear(hidden_layers[-1]))
+        return self.linear(hidden_layers[-1])
