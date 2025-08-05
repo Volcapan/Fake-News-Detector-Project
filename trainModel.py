@@ -51,7 +51,7 @@ def validate(model, dataLoader, lossFunc):
         
         totalCorrect += (predictions == labels).type(torch.float).sum().item()
     
-    print(f"Total correctness: {totalCorrect / numSamples}, Loss: {totalLoss / numBatches}")
+    print(f"Correctness: {totalCorrect / numSamples}, Loss: {totalLoss / numBatches}")
 
 def main():
     randomStateVal = 440
@@ -81,6 +81,19 @@ def main():
 
         train(fakeNewsNNModel, trainDataLoader, lossFunc, optimFunc)
         validate(fakeNewsNNModel, validateDataLoader, lossFunc)
+
+    userInput = input("Test model on test data? (Type 'yes' to test): ")
+    userInput = userInput.lower()
+
+    if userInput == "yes":
+        validate(fakeNewsNNModel, testDataLoader, lossFunc)
+    
+    userInput = input("Save model? (Type 'yes' to save): ")
+    userInput = userInput.lower()
+
+    if userInput == "yes":
+        torch.save(fakeNewsNNModel.state_dict(), "savedFakeNewsNNModel.pth")
+        print("Model saved")
 
 
 if __name__ == "__main__":
