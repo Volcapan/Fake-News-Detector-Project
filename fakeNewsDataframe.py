@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy
 import re
+import constantNames
 
 class fakeNewsDataframe:
     def convertToLower(_, aStr):
@@ -8,6 +9,17 @@ class fakeNewsDataframe:
     
     def getRidOfPunc(_, aStr):
         return re.sub(r"[^\w\s]", "", aStr)
+    
+    def processSentence(self, str):
+        processedStr = []
+
+        for word in str:
+            if word in self.wordMap:
+                processedStr.append(self.wordMap[word])
+            else:
+                processedStr.append(self.wordMap["<unknown>"])
+        
+        return processedStr
     
     def processTitleAndText(self):
         numRows = len(self.news["title"])
@@ -35,11 +47,7 @@ class fakeNewsDataframe:
         self.wordMap["<unknown>"] = 1
 
         for sentence in listOfTitleAndText:
-            processedTaT = []
-
-            for word in sentence:
-                processedTaT.append(self.wordMap[word])
-            
+            processedTaT = self.processSentence(sentence)
             listOfProcessedTaT.append(processedTaT)
         
         self.vocabSize = len(self.wordMap)
@@ -49,11 +57,11 @@ class fakeNewsDataframe:
     def __init__(self):
         fakeNews = pd.read_csv("Data/Fake.csv")
         # truthfulness == 0 means fake
-        fakeNews["truthfulness"] = numpy.zeros(fakeNews.shape[0])
+        fakeNews[constantNames.truthfulnessName] = numpy.zeros(fakeNews.shape[0])
 
         realNews = pd.read_csv("Data/True.csv")
         # truthfulness == 1 means real
-        realNews["truthfulness"] = numpy.ones(realNews.shape[0])
+        realNews[constantNames.truthfulnessName] = numpy.ones(realNews.shape[0])
             
         self.news = pd.concat([fakeNews, realNews], ignore_index=True)
         self.news["title"] =  self.news["title"].apply(self.convertToLower)
@@ -63,7 +71,7 @@ class fakeNewsDataframe:
         self.news["text"] = self.news["text"].apply(self.getRidOfPunc)
         self.news["text"] = self.news["text"].astype('string')
 
-        self.news["titleAndText"] = self.processTitleAndText()
+        self.news[constantNames.titleAndTextName] = self.processTitleAndText()
 
         self.news = self.news.drop("subject", axis=1)
         self.news = self.news.drop("date", axis=1)

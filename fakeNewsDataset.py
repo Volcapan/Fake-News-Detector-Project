@@ -1,6 +1,7 @@
 import torch
 from torch.utils.data import Dataset
 import getDevice
+import constantNames
 
 class fakeNewsDataset(Dataset):
     def __init__(self, dataframe):
@@ -8,13 +9,13 @@ class fakeNewsDataset(Dataset):
         
         self.samples = []
 
-        for titleAndText in dataframe["titleAndText"]:
+        for titleAndText in dataframe[constantNames.titleAndTextName]:
             tatTensor = torch.tensor(titleAndText)
             tatTensor = tatTensor.to(getDevice.get_device_func())
             
             self.samples.append(tatTensor)
 
-        self.labels = torch.tensor(dataframe["truthfulness"].to_numpy())
+        self.labels = torch.tensor(dataframe[constantNames.truthfulnessName].to_numpy())
         self.labels = self.labels.to(getDevice.get_device_func())
         
         self.size = len(self.samples)

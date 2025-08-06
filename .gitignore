@@ -1,2 +1,3 @@
 fake-news-detector-venv/
 __pycache__/
+savedFakeNewsNNModel.pth

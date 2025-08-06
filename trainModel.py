@@ -7,6 +7,7 @@ from torch.utils.data import DataLoader
 import collateFunc
 from fakeNewsNN import fakeNewsNN
 import getDevice
+import constantNames
 
 def train(model, dataLoader, lossFunc, optimFunc):
     print("Training")
@@ -92,7 +93,7 @@ def main():
     userInput = userInput.lower()
 
     if userInput == "yes":
-        torch.save(fakeNewsNNModel.state_dict(), "savedFakeNewsNNModel.pth")
+        torch.save(fakeNewsNNModel.state_dict(), constantNames.fileName)
         print("Model saved")
 
 
