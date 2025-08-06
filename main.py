@@ -45,9 +45,9 @@ def main():
             prediction = model.sigmoid(prediction)
 
             if prediction >= 0.5:
-                print("The article is probably fake")
-            else:
                 print("The article is probably real")
+            else:
+                print("The article is probably fake")
         
         shouldContinue = input("Do another article? (Type 'yes' to do another article): ")
         shouldContinue = shouldContinue.lower()
